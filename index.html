@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dynamic JavaScript DOM Logic & RESTful API Client with real-time search, filtering, sorting, and persistent shopping cart." />
+  <title>Nexus Market | Modern RESTful Store</title>
+
+  <!-- Google Fonts for crisp, modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Header / Navigation Bar -->
+  <header class="app-header" role="banner">
+    <div class="header-container">
+      <a href="#" class="brand-logo" aria-label="Nexus Market Home">
+        <svg class="brand-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+        <span class="brand-name">Nexus<strong>Market</strong></span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="search-wrapper" role="search">
+        <label for="searchInput" class="visually-hidden">Search products</label>
+        <div class="search-input-group">
+          <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Search products by title, category, or description..."
+            aria-label="Search products"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button
+            type="button"
+            id="clearSearchBtn"
+            class="btn-clear-search"
+            aria-label="Clear search query"
+            hidden
+          >
+            &times;
+          </button>
+        </div>
+      </div>
+
+      <!-- Header Actions (Cart Button) -->
+      <div class="header-actions">
+        <button
+          type="button"
+          id="cartTriggerBtn"
+          class="btn-cart-trigger"
+          aria-label="View Shopping Cart"
+          aria-haspopup="dialog"
+        >
+          <svg class="cart-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-label">Cart</span>
+          <span id="cartBadge" class="cart-badge" aria-label="0 items in cart">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification / Error Banner -->
+  <div
+    id="errorBanner"
+    class="error-banner"
+    role="alert"
+    aria-live="assertive"
+    hidden
+  ></div>
+
+  <!-- Main Container -->
+  <div class="main-wrapper">
+    <!-- Controls Section: Categories & Sorting -->
+    <section class="controls-section" aria-label="Product filters and sorting controls">
+      <div class="categories-scroll-wrapper">
+        <nav class="categories-nav" id="categoryTabs" aria-label="Product categories">
+          <!-- Dynamically populated category buttons -->
+        </nav>
+      </div>
+
+      <div class="sort-and-meta">
+        <span id="resultsCount" class="results-count" aria-live="polite">
+          Loading catalog...
+        </span>
+
+        <div class="sort-control">
+          <label for="sortSelect" class="sort-label">Sort by:</label>
+          <select id="sortSelect" class="sort-select" aria-label="Sort products">
+            <option value="default">Default</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating-high">Rating: High to Low</option>
+            <option value="name-az">Name: A-Z</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Products Area -->
+    <main id="mainContent" class="main-content">
+      <section
+        id="productGrid"
+        class="product-grid"
+        aria-label="Product catalog"
+        aria-live="polite"
+      >
+        <!-- Dynamic product cards or skeleton loading placeholders injected here -->
+      </section>
+    </main>
+  </div>
+
+  <!-- Shopping Cart Slide-out Drawer -->
+  <div id="cartBackdrop" class="cart-backdrop" aria-hidden="true"></div>
+
+  <aside
+    id="cartDrawer"
+    class="cart-drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Shopping Cart"
+    aria-hidden="true"
+  >
+    <div class="cart-header">
+      <div class="cart-header-title">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <h3>Shopping Cart</h3>
+        <span id="cartHeaderCount" class="cart-header-count">(0 items)</span>
+      </div>
+      <button
+        type="button"
+        id="closeCartBtn"
+        class="btn-close-cart"
+        aria-label="Close shopping cart"
+      >
+        &times;
+      </button>
+    </div>
+
+    <!-- Scrollable Items List -->
+    <div class="cart-body">
+      <!-- Empty Cart State -->
+      <div id="cartEmptyState" class="cart-empty-state">
+        <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <h4>Your cart is empty</h4>
+        <p>Explore our catalog and find something you love!</p>
+        <button type="button" id="continueShoppingBtn" class="btn btn-secondary">
+          Start Shopping
+        </button>
+      </div>
+
+      <!-- Items Container -->
+      <div id="cartItemsContainer" class="cart-items-container" role="list">
+        <!-- Rendered cart items -->
+      </div>
+    </div>
+
+    <!-- Cart Footer with Totals and Actions -->
+    <div id="cartFooter" class="cart-footer" hidden>
+      <div class="cart-summary-row">
+        <span class="summary-label">Subtotal:</span>
+        <span id="cartTotalPrice" class="summary-value">$0.00</span>
+      </div>
+      <p class="cart-tax-notice">Taxes and shipping calculated at checkout.</p>
+      <div class="cart-action-buttons">
+        <button type="button" id="clearCartBtn" class="btn btn-outline-danger">
+          Clear Cart
+        </button>
+        <button type="button" id="checkoutBtn" class="btn btn-primary btn-checkout">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Floating Toast Notifications Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Application Bootstrap (ES Module) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
